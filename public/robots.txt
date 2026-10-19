@@ -3,4 +3,4 @@ Allow: /
 
 Disallow: /*?*
 
-Sitemap: https://us-flood-cost.example/sitemap-index.xml
+Sitemap: https://floodcostzip.com/sitemap-index.xml

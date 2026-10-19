@@ -1,5 +1,5 @@
 /** Configuration centrale du site (générée par new-site.py). */
-export const SITE_URL = "https://us-flood-cost.example";
+export const SITE_URL = "https://floodcostzip.com";
 export const SITE_NAMES: Record<string, string> = {"en": "Flood Cost by ZIP"};
 export const LANG_TAGS: Record<string, string> = {"en": "en-US"};
 export const OG_LOCALES: Record<string, string> = {"en": "en_US"};
@@ -16,7 +16,7 @@ export const AUTHOR_DESC: Record<string, string> = {"en": "Radif Partners turns 
  *  themes reellement traites par le site, pas une liste de mots-cles : un sujet
  *  declare ici sans page qui le couvre est une declaration fausse. */
 export const KNOWS_ABOUT: Record<string, string[]> = {"en": ["Flood insurance premiums by state, county and ZIP code", "Risk-based flood insurance pricing and the 18% annual increase cap", "Flood insurance claims paid by county", "Building and contents flood coverage limits", "Flood zones A, V and X", "Private flood insurance compared with the federal program"]};
-export const CONTACT_EMAIL = "contact@us-flood-cost.example";
+export const CONTACT_EMAIL = "contact@floodcostzip.com";
 export const THEME_COLOR = '#0B5C7A';
 export const LOGO_SYMBOL = 'FLD';
 export const BING_VERIFY_CODE = '';
