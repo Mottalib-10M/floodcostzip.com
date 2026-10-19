@@ -1,0 +1,12 @@
+---
+/** The calculator of a page: the ZIP / county lookup for 'lookup', a declarative calculator (tool-specs.ts) otherwise. */
+import FloodLookup from './calc/FloodLookup';
+import SpecTool from './calc/SpecTool';
+import { route } from '../i18n/routes';
+interface Props { kind: string; arg?: Record<string, number | string>; idPrefix?: string }
+const { kind, arg, idPrefix = 't' } = Astro.props;
+const methodHref = route('method', 'en');
+---
+{kind === 'lookup'
+  ? <FloodLookup client:load state={String(arg?.st ?? '')} idPrefix={idPrefix} methodHref={methodHref} />
+  : <SpecTool client:load kind={kind} arg={arg ? JSON.stringify(arg) : undefined} methodHref={methodHref} idPrefix={idPrefix} />}

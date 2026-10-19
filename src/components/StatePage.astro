@@ -1,0 +1,63 @@
+---
+/**
+ * A state page: the ZIP / county lookup set on the state, the folded answer, the state's own text
+ * (src/content/states/<slug>.ts), then the state's tables built from the data asset (counties, price
+ * bands, the floods that paid the most). Tables and their one-line captions are generated, so they carry
+ * data-chrome; the prose of the content file is what makes the page.
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+import Clamp from './Clamp.astro';
+import Tool from './Tool.astro';
+import Body from './Body.astro';
+import { route, ROUTES } from '../i18n/routes';
+import { label } from '../i18n/nav';
+import { t } from '../i18n/ui';
+import { guideById, statePageById, stateId } from '../lib/pages';
+import { helpers, SOURCES, table } from '../lib/helpers';
+import { stateBySlug } from '../lib/data';
+import { KIT as K } from '../lib/kit';
+import { articleSchema, faqSchema, breadcrumbSchema, webPageSchema, webApplicationSchema } from '../lib/seo';
+import { AUTHOR_NAME } from '../data/site-config';
+import type { StateDef } from '../lib/page-types';
+interface Props { def: StateDef }
+const { def } = Astro.props;
+const lang = 'en';
+const ui = t(lang);
+const st = stateBySlug(def.slug);
+const id = stateId(def.slug);
+const path = route(id, lang);
+const h1 = `Flood insurance in ${st.name}: cost by ZIP code and county`;
+const jsonLd = [webApplicationSchema({ name: h1, description: def.description, path, lang }), articleSchema({ title: h1, description: def.description, path, lang }), webPageSchema({ name: h1, description: def.description, path, lang }), breadcrumbSchema([{ name: ui.breadcrumbHome, path: route('home', lang) }, { name: 'Flood insurance by state', path: route('flood-insurance-by-state', lang) }, { name: st.name, path }])];
+if (def.faqs.length) jsonLd.push(faqSchema(def.faqs, lang));
+const card = (x: string) => guideById(x)?.card ?? (statePageById(x) ? statePageById(x)!.intro : '');
+const related = def.related.filter((x) => ROUTES.some((r) => r.id === x)).map((x) => ({ href: route(x, lang), name: label(x), description: card(x) }));
+const sources = ['fema_sfh_cost', 'openfema_policies', 'openfema_claims', 'usc_4015'].map((k) => ({ name: SOURCES[k].label, url: SOURCES[k].url }));
+const left = (cur: number, risk: number) => { const g = K.glide({ current: cur, full: risk, cap: K.P.caps.standard, fees: K.fees('primary') }); return g.decrease ? 'lower' : g.steps === 0 ? 'none' : String(g.steps); };
+const countyRows = st.topCounties.map((c) => [c.name, c.pol ? K.num(c.pol.n) : 'n/a', c.pol ? K.usd(c.pol.median) : 'n/a', c.pol?.full ? K.usd(c.pol.full) : 'n/a', c.pol ? K.pct(c.pol.capped, 0) : 'n/a', c.pol?.full ? left(c.pol.median, c.pol.full) : 'n/a', K.usd(c.current), c.claims ? K.usd(c.claims.median) : 'n/a']);
+const bands = st.ranges.filter((r) => r.pif > 0);
+const bandRows = [
+  ...bands.filter((r) => r.lo < 5000).map((r) => [`${K.usd(r.lo)} to ${K.usd(r.hi!)}`, K.num(r.pif), K.pct(r.share, 1), r.rcv ? K.usd(r.rcv) : 'n/a']),
+  ...(bands.some((r) => r.lo >= 5000) ? [[`${K.usd(5000)} or more`, K.num(bands.filter((r) => r.lo >= 5000).reduce((a, r) => a + r.pif, 0)), K.pct(bands.filter((r) => r.lo >= 5000).reduce((a, r) => a + r.share, 0), 1), '']] : []),
+];
+const eventRows = st.events.map((e) => [e.event, String(e.year), K.num(e.n), K.usd(e.total)]);
+---
+<PageLayout title={def.title} description={def.description} lang={lang} jsonLd={jsonLd} faqs={def.faqs} related={related} sources={sources} breadcrumbs={[{ label: 'Flood insurance by state', href: route('flood-insurance-by-state', lang) }, { label: st.name }]}>
+  <article>
+    <header class="mb-4">
+      <h1 class="font-serif text-[1.75rem] font-bold text-navy-900 max-sm:leading-tight sm:text-3xl md:text-4xl">{h1}</h1>
+      <p class="mt-2 text-base text-navy-700 sm:text-lg">{def.intro}</p>
+    </header>
+    <div data-outil data-chrome class="mb-4"><Tool kind="lookup" arg={{ st: st.code }} idPrefix={`s-${st.code.toLowerCase()}`} /></div>
+    <p class="mb-6 text-sm text-navy-600">{ui.reviewedBy} <a href={route('about', lang)} class="underline hover:text-navy-900">{AUTHOR_NAME}</a> · <a href={route('method', lang)} class="underline hover:text-navy-900">{label('method')}</a> · {K.num(st.zips)} ZIP codes and {K.num(st.counties)} counties of {st.name} in FEMA's tables · not a quote</p>
+    <Clamp text={def.resume} lang={lang} id={`clamp-${def.slug}`} class="mb-8" />
+    <Body html={def.body(helpers())} path={path} />
+    <section data-chrome class="mt-10">
+      <h2 class="font-serif text-2xl font-bold text-navy-900">The {st.name} counties with the most policies</h2>
+      <Fragment set:html={table(['County', 'Policies', 'Median bill', 'Full-risk median', 'Still below full risk', `Renewals left at ${K.pct(K.P.caps.standard, 0)}`, 'Median bill, August 2023', `Median claim ${K.N.claimYears[0]}-${K.N.claimYears[1]}`], countyRows, `Single-family homes. OpenFEMA policies in force on ${K.day(K.N.policiesDate!)}; full-risk median: the same policies at their full-risk premium with the same assessment and fees. August 2023: FEMA's single-family table.`, ['l', 'r', 'r', 'r', 'r', 'r', 'r', 'r'])} />
+      {bandRows.length > 0 && <h2 class="mt-8 font-serif text-2xl font-bold text-navy-900">Full-risk prices of {st.name} homes, band by band</h2>}
+      {bandRows.length > 0 && <Fragment set:html={table(['Full risk-based price a year', 'Policies', 'Share', 'Median rebuild value'], bandRows, `FEMA, single-family policies in force on August 31, 2023 (${K.num(st.pif)} in ${st.name}).`, ['l', 'r', 'r', 'r'])} />}
+      {eventRows.length > 0 && <h2 class="mt-8 font-serif text-2xl font-bold text-navy-900">The floods that paid the most {st.name} claims since 2016</h2>}
+      {eventRows.length > 0 && <Fragment set:html={table(['Event (FEMA name)', 'Year', 'Paid claims', 'Paid in total'], eventRows, 'OpenFEMA claims on single-family homes, building and contents payments, in dollars of the year paid.', ['l', 'r', 'r', 'r'])} />}
+    </section>
+  </article>
+</PageLayout>

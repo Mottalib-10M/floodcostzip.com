@@ -1,0 +1,21 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import { route } from '../../i18n/routes';
+import { AUTHOR_NAME, REVIEW_CYCLE_MONTHS } from '../../data/site-config';
+const lang = 'en';
+---
+<PageLayout title="Editorial policy of Flood Cost by ZIP: federal files, dated figures" description="How Flood Cost by ZIP writes its pages: FEMA files and federal law only, every figure built by a script from dated datasets, small areas withheld, and no money from insurers or agents." lang={lang} noindex={true} breadcrumbs={[{ label: 'Editorial policy' }]} showAuthor={false}>
+  <div class="prose prose-slate max-w-none prose-headings:font-serif">
+    <h1>Editorial policy</h1>
+    <h2>What counts as a source</h2>
+    <p>Prices and claims come from the federal flood program's own files: FEMA's single-family cost tables and the OpenFEMA policy and claims datasets. Rules come from the National Flood Insurance Act (42 U.S.C. chapter 50), the regulations of 44 CFR, FEMA's Flood Insurance Manual and its bulletins, and the laws that extend the program. Insurance company articles and quote sites are read to know what people ask, never as a source of a number.</p>
+    <h2>How a figure reaches a page</h2>
+    <p>No figure is typed into the text. A script reads the federal files and writes the aggregates by ZIP code, county and state; legal amounts live in one parameter file with their source and the date they were read. Pages read those files. A median based on fewer than ten policies or claims is not published, both because it would be noise and because it could point to one household.</p>
+    <h2>What is to come is labeled</h2>
+    <p>FEMA changes its rates and Congress extends the program by short laws. A change announced but not yet in force is shown as to come, with its date, never as the current rule. A figure we cannot trace to an official file is not published.</p>
+    <h2>Independence</h2>
+    <p>{AUTHOR_NAME} receives nothing from insurers, agents, brokers, lenders or lead buyers and links to none of them. There is no advertising today; if some is added it will be labeled, limited to three places a page, and never come from a firm selling insurance.</p>
+    <h2>Review and corrections</h2>
+    <p>The site is reviewed at least every {REVIEW_CYCLE_MONTHS} months, and when FEMA publishes a new OpenFEMA release, a new cost table, a new edition of the manual or when Congress changes the program's end date. A reported error is checked against the source and, once fixed, moves the date shown on the page. Write through the <a href={route('contact', lang)}>contact page</a>; the data steps are on the <a href={route('method', lang)}>method page</a>.</p>
+  </div>
+</PageLayout>

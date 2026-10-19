@@ -1,0 +1,27 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import LegalIdentity from '../../components/LegalIdentity.astro';
+import { CONTACT_EMAIL } from '../../data/site-config';
+import { route } from '../../i18n/routes';
+import { contactPageSchema } from '../../lib/seo';
+const lang = 'en';
+const path = route('contact', lang);
+const description = 'Write to the publisher of Flood Cost by ZIP about a figure, a ZIP code median or a source. E-mail only, no quote and no advice on your own policy, nothing to sell or pass on.';
+---
+<PageLayout title="Contact Flood Cost by ZIP: corrections to a figure or a source" description={description} lang={lang} noindex={true} jsonLd={[contactPageSchema({ name: 'Contact', description, path, lang })]} breadcrumbs={[{ label: 'Contact' }]} showAuthor={false}>
+  <div class="prose prose-slate max-w-none prose-headings:font-serif">
+    <h1>Contact</h1>
+    <p>By e-mail: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. No form and no phone line: an insurance page that asks for your address is usually about to pass it to agents, and this one passes nothing on.</p>
+    <h2>Messages that help</h2>
+    <ul>
+      <li>A rule or amount that differs from the statute, the regulation or FEMA's manual: name the page and the paragraph of the official text.</li>
+      <li>A ZIP code or county whose median looks wrong next to your own declarations page: give the ZIP code, the year and the zone, never your policy number.</li>
+      <li>A new OpenFEMA release or a new FEMA cost table that we have not loaded yet.</li>
+      <li>Embedding the ZIP lookup on a local news site, a realtor's blog or a forum: the code is on the <a href={route('widget', lang)}>embed page</a>.</li>
+    </ul>
+    <h2>What we cannot do</h2>
+    <p>We do not quote premiums, review policies or tell anyone whether to buy, drop or switch a policy. For a price, ask a licensed agent or insurer; for a claim, your insurer; for a map question, your community's floodplain manager.</p>
+    <h2>Publisher</h2>
+    <LegalIdentity lang={lang} />
+  </div>
+</PageLayout>

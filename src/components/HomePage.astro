@@ -1,0 +1,60 @@
+---
+/**
+ * Home (the pillar): the ZIP and county lookup first, the folded answer, the 51 states in one table,
+ * why the averages quoted elsewhere disagree, the pages by group, long text in accordions, FAQ.
+ * Text: src/content/home.ts. Tables are generated from the data asset, so they carry data-chrome.
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+import Clamp from './Clamp.astro';
+import Tool from './Tool.astro';
+import Body from './Body.astro';
+import { HOME } from '../content/home';
+import { route, ROUTES } from '../i18n/routes';
+import { GROUPS } from '../i18n/nav';
+import { helpers, SOURCES, table } from '../lib/helpers';
+import { GUIDES, STATE_PAGES, stateId } from '../lib/pages';
+import { KIT as K } from '../lib/kit';
+import { faqSchema, organizationSchema, websiteSchema, webPageSchema, webApplicationSchema } from '../lib/seo';
+import { LAST_UPDATED } from '../data/site-config';
+const lang = 'en';
+const x = HOME;
+const path = route('home', lang);
+const h = helpers();
+const sources = x.sources.map((k) => ({ name: SOURCES[k].label, url: SOURCES[k].url }));
+const jsonLd = [websiteSchema(lang), organizationSchema(lang), webPageSchema({ name: x.h1, description: x.description, path, lang }), webApplicationSchema({ name: x.h1, description: x.description, path, lang }), faqSchema(x.faqs, lang)];
+const year = K.N.policiesDate!.slice(0, 4);
+const hasPage = (slug: string) => STATE_PAGES.some((p) => p.slug === slug);
+const left = (cur: number, risk: number) => { const g = K.glide({ current: cur, full: risk, cap: K.P.caps.standard, fees: K.fees('primary') }); return g.decrease ? 'lower' : g.steps === 0 ? 'none' : String(g.steps); };
+const rows = [...K.STATES].sort((a, b) => a.name.localeCompare(b.name)).map((s) => [
+  hasPage(s.slug) ? `<a href="${route(stateId(s.slug), lang)}">${s.name}</a>` : s.name,
+  s.pol ? K.num(s.pol.n) : 'n/a', s.pol ? K.usd(s.pol.median) : 'n/a', s.pol?.full ? K.usd(s.pol.full) : 'n/a', s.pol ? K.pct(s.pol.capped, 0) : 'n/a', s.pol?.full ? left(s.pol.median, s.pol.full) : 'n/a',
+]);
+---
+<PageLayout title={x.title} description={x.description} lang={lang} jsonLd={jsonLd} faqs={x.faqs} sources={sources}>
+  <header class="mb-4">
+    <h1 class="font-serif text-[1.75rem] font-bold text-navy-900 max-sm:leading-tight sm:text-3xl md:text-4xl">{x.h1}</h1>
+    <p class="mt-2 text-base text-navy-700 sm:text-lg">{x.intro}</p>
+  </header>
+  <div data-outil data-chrome><Tool kind="lookup" idPrefix="home" /></div>
+  <p class="mt-3 text-sm text-navy-600">Built on FEMA and OpenFEMA files, data of {K.day(K.N.policiesDate!)} · <a href={route('method', lang)} class="underline">How the figures are made</a> · <a href={route('about', lang)} class="underline">Who publishes this</a> · updated <time datetime={LAST_UPDATED}>{K.day(LAST_UPDATED)}</time></p>
+  <Clamp text={x.resume} lang={lang} id="clamp-home" class="my-8" />
+  <section data-chrome class="mt-8">
+    <h2 class="font-serif text-2xl font-bold text-navy-900">Flood insurance cost in every state</h2>
+    <Fragment set:html={table(['State', 'Policies', 'Median bill', 'Full-risk median', 'Still below full risk', `Renewals left at ${K.pct(K.P.caps.standard, 0)}`], rows, `Single-family homes, OpenFEMA policies in force on ${K.day(K.N.policiesDate!)}. Median bill: total yearly cost. Full-risk median: the same policies at their full-risk premium, with the same assessment and fees. Renewals left: from the median bill to the full-risk median, for a main home.`, ['l', 'r', 'r', 'r', 'r', 'r'])} />
+  </section>
+  <section class="mt-8"><Body html={x.why(h)} path={path} /></section>
+  <section class="mt-10" data-chrome>
+    {GROUPS.map((g) => (
+      <div class="mb-6">
+        <h2 class="font-serif text-xl font-bold text-navy-900">{g.label}</h2>
+        <ul class="mt-3 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2 lg:grid-cols-3">
+          {GUIDES.filter((p) => p.group === g.id && ROUTES.some((r) => r.id === p.id)).map((p) => <li><a href={route(p.id, lang)} class="font-medium text-accent-700 underline-offset-2 hover:underline">{p.nav}</a><span class="block text-navy-600">{p.card}</span></li>)}
+        </ul>
+      </div>
+    ))}
+  </section>
+  <section class="mt-10">
+    <h2 class="font-serif text-2xl font-bold text-navy-900">Before you renew or buy</h2>
+    {x.sections(h).map((s) => <details class="fold"><summary><h3 class="fold-h">{s.title}</h3></summary><div class="pb-4"><Body html={s.html} path={path} /></div></details>)}
+  </section>
+</PageLayout>

@@ -1,0 +1,13 @@
+{
+ "accent": "#0B5C7A",
+ "symbol": "FLD",
+ "variants": [
+  {
+   "file": "og-en.png",
+   "title": "Flood insurance cost\nin your ZIP, and where it is heading",
+   "subtitle": "Current premium · full-risk price · 18% steps · local claims",
+   "badge": "Federal flood program data, policies in force 2023 to 2026",
+   "brand": "Flood Cost by ZIP"
+  }
+ ]
+}

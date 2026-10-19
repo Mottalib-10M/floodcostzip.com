@@ -1,0 +1,54 @@
+---
+/** Method: the data steps, the rules, the tests, the limits. Figures from the kit. */
+import PageLayout from '../../layouts/PageLayout.astro';
+import { route } from '../../i18n/routes';
+import { KIT as K } from '../../lib/kit';
+import { src, table } from '../../lib/helpers';
+import { breadcrumbSchema, webPageSchema } from '../../lib/seo';
+const lang = 'en';
+const path = route('method', lang);
+const P = K.P;
+const N = K.N;
+const POL = N.policies!;
+const title = 'Flood Insurance Cost Data Method: FEMA and OpenFEMA Files';
+const description = `Flood insurance cost data method: FEMA's 2023 single-family tables, OpenFEMA policies in force on ${K.day(N.policiesDate!)}, claims paid since ${N.claimYears[0]}, and their limits.`;
+const trend = N.policiesTrend!.map((t) => [K.day(t.date), K.num(t.n), K.usd(t.median)]);
+const fees = [
+  ['Federal Policy Fee', K.usd(P.fees.federalPolicyFee.primary), 'No'],
+  ['HFIAA surcharge, main home', K.usd(P.fees.hfiaa.primary), 'No'],
+  ['HFIAA surcharge, other buildings', K.usd(P.fees.hfiaa.other), 'No'],
+  ['Reserve Fund Assessment', `${K.pct(P.fees.reserveFundRate, 0)} of the discounted premium`, 'Moves with it'],
+  ['Increased Cost of Compliance premium', `${K.pct(P.fees.iccRate, 1)} of the premium, at most ${K.usd(P.fees.iccMax)}`, 'Part of the premium'],
+];
+---
+<PageLayout title={title} description={description} lang={lang} jsonLd={[webPageSchema({ name: 'Where the numbers come from', description, path, lang }), breadcrumbSchema([{ name: 'Home', path: route('home', lang) }, { name: 'Where the numbers come from', path }])]} breadcrumbs={[{ label: 'Where the numbers come from' }]}>
+  <article class="prose prose-slate max-w-none prose-headings:font-serif">
+    <h1>Where the numbers come from</h1>
+    <p><strong>Every price on this site is a median of real federal flood policies, read in FEMA's own files and dated.</strong> {K.num(POL.n)} single-family policies in force on {K.day(N.policiesDate!)}, {K.num(N.zipCount)} ZIP codes and {K.num(N.countyCount)} counties from FEMA's tables, {K.num(N.claims.n)} paid claims since {N.claimYears[0]}: one script, rerun at each release, produced all of them.</p>
+    <p>This page lists the files, the steps of that script, the rules the calculators apply and what is left out. Legal amounts were read on {K.day(P.retrieved_at)}.</p>
+    <h2>1. FEMA's single-family cost tables (August 2023)</h2>
+    <p>When Risk Rating 2.0 had applied to every policy, FEMA published the cost of single-family policies under the new method for each state, county and ZIP code (<Fragment set:html={src('fema_sfh_cost')} />). The tables cover the {K.num(N.pif)} single-family policies in force on {K.day(N.snapshot)}, priced with the rates of {K.day(N.ratesOf)}. For each area they give the number of policies, the median of what policyholders were paying and the median of the full risk-based cost, both including "all premiums, fees, assessments and surcharges". They also give the share of policies exposed to each type of flooding and the spread of full-risk prices in $1,000 bands. National medians: {K.usd(N.current)} paid, {K.usd(N.risk)} at full risk.</p>
+    <h2>2. OpenFEMA policies: the cost today</h2>
+    <p>The <Fragment set:html={src('openfema_policies', 'OpenFEMA NFIP Redacted Policies dataset')} /> lists every policy term since 2009 with its ZIP code, county, rated flood zone, coverage and total cost. We keep single-family homes (occupancy codes 1 and 11) and count a policy as in force on a date when its term started on or before that date and ends after it. The date used is the last month-end for which the file is complete: insurers report new terms with a delay, so we take the latest month whose new terms reach 93 % of the same month a year earlier. That gives {K.day(N.policiesDate!)}.</p>
+    <p>Test of the method: on August 31, 2023 the same computation finds the policy count and the median cost of FEMA's own table within about 1 % and a few dollars. The median then moved as follows.</p>
+    <Fragment set:html={table(['Policies in force on', 'Single-family policies', 'Median total cost'], trend, 'OpenFEMA, single-family policies, total cost of the policy (premium, assessment, surcharge, fee).', ['l', 'r', 'r'])} />
+    <h2>3. OpenFEMA claims</h2>
+    <p>The <Fragment set:html={src('openfema_claims', 'OpenFEMA NFIP Redacted Claims dataset')} /> lists each claim with its ZIP code, county, flood event and payments. For single-family homes with a loss from {N.claimYears[0]} to {N.claimYears[1]}, we count a claim as paid when building plus contents payments are above zero and give the median and the average of that amount, in dollars of the year paid. Claims of the last year are still being settled, so the last year looks smaller than it will be.</p>
+    <h2>4. Small areas and joins</h2>
+    <p>A ZIP code or county median based on fewer than ten policies or claims is not published. ZIP codes are those reported on the policy, which can differ from a mailing ZIP code. County names of FEMA's tables are matched with the Census Bureau's 2020 county codes; one name of Alaska could not be matched.</p>
+    <h2>5. The rules the calculators apply</h2>
+    <p>Yearly increase cap: {K.pct(P.caps.standard, 0)} for most properties under <Fragment set:html={src('usc_4015', '42 U.S.C. 4015(e)')} />, {K.pct(P.caps.higher, 0)} for the properties of <Fragment set:html={src('usc_4014', '42 U.S.C. 4014(a)(2)')} />. FEMA's manual places the cap inside the discounted premium and adds the fees on top (<Fragment set:html={src('fema_manual')} />), so the calculators take the fixed fees out, apply the cap to the rest, and add the fees back. A bill above its full-risk price goes down to it at the next renewal. FEMA's yearly rate changes, which move the full-risk price itself, are not forecast.</p>
+    <Fragment set:html={table(['Charge', 'Amount', 'Inside the yearly cap'], fees, 'FEMA Flood Insurance Manual, October 2025 edition, Section 3; unchanged by bulletin W-26001 (December 1, 2026).', ['l', 'l', 'l'])} />
+    <p>Coverage: {K.usd(P.limits.building)} for the building and {K.usd(P.limits.contents)} for contents of a one-to-four family home, {K.usd(P.limits.nonResidentialBuilding)} and {K.usd(P.limits.nonResidentialContents)} for a non-residential building (<Fragment set:html={src('usc_4013', '42 U.S.C. 4013')} />), deductibles up to {K.usd(P.deductibles.residentialMax)}. Waiting period: {P.waiting.days} days, none at a loan closing, one day within {P.waiting.mapRevisionMonths} months of a map revision (<Fragment set:html={src('cfr_61_6', '44 CFR 61.11')} />).</p>
+    <h2>6. What is not modeled</h2>
+    <ul>
+      <li>The premium of your own building: it depends on its elevation, foundation, replacement cost and distance to water, which only an insurer's rating engine reads.</li>
+      <li>Condominium associations, two-to-four family buildings, other residential and commercial buildings.</li>
+      <li>Private flood insurance prices, which are not published in any public file.</li>
+      <li>FEMA rate changes after the date of the files, and any change of law after {K.day(P.retrieved_at)}.</li>
+    </ul>
+    <h2>7. Terms of the federal data</h2>
+    <p>Citation of the datasets: Federal Emergency Management Agency (FEMA), OpenFEMA Datasets NFIP Redacted Policies v3 and NFIP Redacted Claims v3, retrieved on {K.day(P.retrieved_at)}. This product uses the Federal Emergency Management Agency's OpenFEMA API, but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s). Terms: <Fragment set:html={src('openfema_terms')} />.</p>
+    <p>Corrections: <a href={route('contact', lang)}>contact page</a>. These are statistics about areas, not a quote and not advice about your own policy.</p>
+  </article>
+</PageLayout>

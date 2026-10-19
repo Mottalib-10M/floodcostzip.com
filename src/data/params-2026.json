@@ -1,0 +1,198 @@
+{
+  "_readme": "Every legal value the site uses lives here, never in the code. Each value was read on the official source cited below on retrieved_at. Data figures (medians, claims) live in national.json, states.json and counties.json, built by scripts/build-data.py.",
+  "year": 2026,
+  "retrieved_at": "2026-10-19",
+  "valid_from": "2026-01-01",
+  "valid_to": "2026-12-31",
+  "caps": {
+    "_basis": "42 U.S.C. 4015(e): yearly increase of the risk premium for an individual property capped at 18 %; 42 U.S.C. 4015(c): 25 % a year for non-primary residences, business properties, severe repetitive loss and substantially damaged or improved buildings. The cap applies to the premium, not to the Federal Policy Fee or the HFIAA surcharge.",
+    "standard": 0.18,
+    "higher": 0.25
+  },
+  "fees": {
+    "_basis": "FEMA Flood Insurance Manual, October 2025 edition, Section 3.II.F (Tables 33 to 36), unchanged by bulletin W-26001 (December 1, 2026). Fees and surcharges are not part of the full-risk or discounted premium; the yearly cap sits inside the discounted premium.",
+    "federalPolicyFee": {
+      "primary": 47,
+      "other": 47
+    },
+    "hfiaa": {
+      "primary": 25,
+      "other": 250
+    },
+    "reserveFundRate": 0.18,
+    "probationSurcharge": 50,
+    "iccRate": 0.019,
+    "iccMax": 75
+  },
+  "limits": {
+    "_basis": "42 U.S.C. 4013(b), 44 CFR 61.6, FEMA Flood Insurance Manual Table 24: one-to-four family homes 250,000 building and 100,000 contents; non-residential 500,000 and 500,000; ICC pays up to 30,000.",
+    "building": 250000,
+    "contents": 100000,
+    "otherResidentialBuilding": 500000,
+    "nonResidentialBuilding": 500000,
+    "nonResidentialContents": 500000,
+    "icc": 30000
+  },
+  "deductibles": {
+    "_basis": "42 U.S.C. 4013(d)(1) and FEMA Flood Insurance Manual Table 26: building options 1,000 (coverage up to 100,000) or 1,250 (above), 2,000, 5,000, 10,000; contents 1,000, 2,000, 5,000, 10,000. residentialDefault is only the starting value of the calculator, one of the legal options.",
+    "buildingMinSmall": 1000,
+    "buildingMinLarge": 1250,
+    "residentialDefault": 2000,
+    "residentialMax": 10000
+  },
+  "waiting": {
+    "_basis": "42 U.S.C. 4013(c), 44 CFR 61.11 and FEMA Flood Insurance Manual 2.III: 30 days; none at a loan closing; 1 day in the 13 months after a map revision that newly places the building in a high-risk area (the statute says 1 year); 1 day after a wildfire on federal land within 60 days of containment.",
+    "days": 30,
+    "loanDays": 0,
+    "mapRevisionDays": 1,
+    "mapRevisionMonths": 13,
+    "wildfireDays": 60
+  },
+  "sources": {
+    "fema_sfh_cost": {
+      "url": "https://www.fema.gov/flood-insurance/work-with-nfip/risk-rating/single-family-home",
+      "label": {
+        "en": "FEMA: Cost of Flood Insurance for Single-Family Homes under NFIP's Pricing Approach"
+      }
+    },
+    "openfema_policies": {
+      "url": "https://www.fema.gov/openfema-data-page/nfip-redacted-policies-v3",
+      "label": {
+        "en": "OpenFEMA: NFIP Redacted Policies, version 3"
+      }
+    },
+    "openfema_claims": {
+      "url": "https://www.fema.gov/openfema-data-page/nfip-redacted-claims-v3",
+      "label": {
+        "en": "OpenFEMA: NFIP Redacted Claims, version 3"
+      }
+    },
+    "openfema_terms": {
+      "url": "https://www.fema.gov/about/openfema/terms-conditions",
+      "label": {
+        "en": "OpenFEMA: Terms and Conditions"
+      }
+    },
+    "usc_4015": {
+      "url": "https://www.law.cornell.edu/uscode/text/42/4015",
+      "label": {
+        "en": "42 U.S.C. 4015: Estimates of premium rates (yearly caps)"
+      }
+    },
+    "usc_4013": {
+      "url": "https://www.law.cornell.edu/uscode/text/42/4013",
+      "label": {
+        "en": "42 U.S.C. 4013: Nature and limitation of insurance coverage"
+      }
+    },
+    "usc_4015a": {
+      "url": "https://www.law.cornell.edu/uscode/text/42/4015a",
+      "label": {
+        "en": "42 U.S.C. 4015a: Premium surcharge (HFIAA)"
+      }
+    },
+    "usc_4012a": {
+      "url": "https://www.law.cornell.edu/uscode/text/42/4012a",
+      "label": {
+        "en": "42 U.S.C. 4012a: Mandatory purchase of flood insurance"
+      }
+    },
+    "cfr_61_6": {
+      "url": "https://www.ecfr.gov/current/title-44/chapter-I/subchapter-B/part-61",
+      "label": {
+        "en": "44 CFR Part 61: Insurance coverage and rates (61.6 limits, 61.11 effective date)"
+      }
+    },
+    "fema_manual": {
+      "url": "https://agents.floodsmart.gov/sites/default/files/media/document/2025-09/fema_nfip-FloodInsuranceManual-October2025-508c.pdf",
+      "label": {
+        "en": "FEMA: NFIP Flood Insurance Manual, October 2025 edition"
+      }
+    },
+    "fema_zones": {
+      "url": "https://www.fema.gov/about/glossary/flood-zones",
+      "label": {
+        "en": "FEMA glossary: Flood zones"
+      }
+    },
+    "usc_4014": {
+      "url": "https://www.law.cornell.edu/uscode/text/42/4014",
+      "label": {
+        "en": "42 U.S.C. 4014: Estimates of premium rates, properties on the 25 % track"
+      }
+    },
+    "fema_w26001": {
+      "url": "https://agents.floodsmart.gov/sites/default/files/bulletins/W-26001/w-26001.pdf",
+      "label": {
+        "en": "FEMA bulletin W-26001: NFIP program changes effective December 1, 2026"
+      }
+    },
+    "floodsmart_costs": {
+      "url": "https://www.floodsmart.gov/premiumcosts",
+      "label": {
+        "en": "FloodSmart: How flood insurance premiums are calculated"
+      }
+    },
+    "fema_pricing": {
+      "url": "https://www.fema.gov/flood-insurance/risk-rating",
+      "label": {
+        "en": "FEMA: NFIP's Pricing Approach"
+      }
+    },
+    "fema_reauth": {
+      "url": "https://www.fema.gov/flood-insurance/rules-legislation/congressional-reauthorization",
+      "label": {
+        "en": "FEMA: NFIP congressional reauthorization"
+      }
+    },
+    "pl_119_103": {
+      "url": "https://www.govinfo.gov/content/pkg/PLAW-119publ103/html/PLAW-119publ103.htm",
+      "label": {
+        "en": "Public Law 119-103, Sec. 139: NFIP extended to December 11, 2026"
+      }
+    },
+    "cfr_64_3": {
+      "url": "https://www.ecfr.gov/current/title-44/chapter-I/subchapter-B/part-64/section-64.3",
+      "label": {
+        "en": "44 CFR 64.3: Flood insurance maps and zone symbols"
+      }
+    },
+    "fdic_private": {
+      "url": "https://www.fdic.gov/news/financial-institution-letters/2019/fil19008.html",
+      "label": {
+        "en": "FDIC FIL-8-2019: Final rule on private flood insurance, effective July 1, 2019"
+      }
+    },
+    "gao_2023": {
+      "url": "https://www.gao.gov/products/gao-23-105977",
+      "label": {
+        "en": "GAO-23-105977: Flood insurance premiums under Risk Rating 2.0 (July 2023)"
+      }
+    },
+    "gao_2026": {
+      "url": "https://files.gao.gov/reports/GAO-27-108012/index.html",
+      "label": {
+        "en": "GAO-27-108012: National Flood Insurance Program (October 2026)"
+      }
+    },
+    "floodsmart_zones": {
+      "url": "https://www.floodsmart.gov/flood-zones-and-maps",
+      "label": {
+        "en": "FloodSmart: Flood zones and maps"
+      }
+    }
+  },
+  "program": {
+    "_basis": "Public Law 119-103 (approved September 2, 2026), Sec. 139 and 106(3); FEMA congressional reauthorization page, updated September 28, 2026. fema2023RiskBasedShare: FEMA single-family cost page (updated October 23, 2025), policies in force on August 31, 2023. privateShare2018/2025, policiesApril2026 (about 4.5 million, all occupancies) and policiesPeak2010 (about 5.5 million, March 2010): GAO-27-108012, October 1, 2026.",
+    "authorizedThrough": "2026-12-11",
+    "privateRuleDate": "2019-07-01",
+    "lapseDays": 30,
+    "newlyMappedMonths": 12,
+    "zoneAMortgageChance": 0.26,
+    "fema2023RiskBasedShare": 0.38,
+    "privateShare2018": 0.07,
+    "privateShare2025": 0.14,
+    "policiesApril2026": 4500000,
+    "policiesPeak2010": 5500000
+  }
+}
