@@ -5,7 +5,7 @@
   "valid_from": "2026-01-01",
   "valid_to": "2026-12-31",
   "caps": {
-    "_basis": "42 U.S.C. 4015(e): yearly increase of the risk premium for an individual property capped at 18 %; 42 U.S.C. 4015(c): 25 % a year for non-primary residences, business properties, severe repetitive loss and substantially damaged or improved buildings. The cap applies to the premium, not to the Federal Policy Fee or the HFIAA surcharge.",
+    "_basis": "42 U.S.C. 4015(e)(1): the chargeable risk premium rate of a property may not rise more than 18 % a year; 4015(e)(4) with 4014(a)(2)(A)-(E): 25 % a year for non-primary residences, severe repetitive loss properties, properties whose claims reached their market value, business properties and buildings substantially damaged or improved since July 6, 2012. FEMA's manual places the cap inside the discounted premium; fees and surcharges are outside it.",
     "standard": 0.18,
     "higher": 0.25
   },

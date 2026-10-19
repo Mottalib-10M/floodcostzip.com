@@ -8,7 +8,7 @@ import { VALUE } from '../../content/home';
 import { profilePageSchema, breadcrumbSchema } from '../../lib/seo';
 const lang = 'en';
 const path = route('about', lang);
-const title = 'About Flood Cost by ZIP: who publishes these flood figures';
+const title = 'Flood insurance data publisher: who runs Flood Cost by ZIP';
 const description = 'Flood Cost by ZIP is published by Radif Partners from FEMA and OpenFEMA files: medians by ZIP code and county, no policy sold, no agent, no details asked.';
 ---
 <PageLayout title={title} description={description} lang={lang} jsonLd={[profilePageSchema({ path, lang }), breadcrumbSchema([{ name: 'Home', path: route('home', lang) }, { name: 'About', path }])]} breadcrumbs={[{ label: 'About' }]}>

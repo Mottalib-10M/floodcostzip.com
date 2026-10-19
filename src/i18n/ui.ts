@@ -9,6 +9,6 @@ const en = {
   footerPopular: 'Flood insurance by state',
   notFound: 'This address leads nowhere. The ZIP lookup on the home page gives the median flood bill of single-family homes near you and how far it still has to rise.',
   readMore: 'Read the full answer',
-  estimate: 'Medians describe single-family homes in an area, not your building: your own premium depends on its elevation, distance to water, foundation and rebuild cost. Only an NFIP agent or a private insurer can quote it. This site gives general information, not insurance advice, and earns nothing from any insurer or agent.',
+  estimate: 'Medians describe single-family homes in an area, not your building: your own premium depends on its elevation, distance to water, foundation and rebuild cost. Only an NFIP agent or a private insurer can quote it. These are estimates only: general information, not financial advice, that does not replace a quote. The site earns nothing from any insurer or agent.',
 };
 export function t(_lang: Locale) { return en; }
