@@ -5,7 +5,8 @@
  * policies (25 % for the categories named in params.caps.higher). The fixed charges (Federal Policy Fee,
  * HFIAA surcharge) sit outside the capped amount, so they are taken out before the cap is applied and
  * added back afterwards. When the full-risk price is BELOW today's premium, the decrease is applied at
- * the next renewal at once (FEMA, Risk Rating 2.0: decreases are not phased in).
+ * the next renewal at once: "Policyholders who have premium decreases will transition to the lower rate
+ * immediately when their policies renew" (FEMA fact sheet Understanding Risk Rating 2.0, params source fema_rr2_factsheet).
  *
  * All amounts are yearly totals as printed on a declarations page (premium + assessments + fees).
  */

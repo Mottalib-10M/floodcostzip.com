@@ -41,12 +41,13 @@
     "residentialMax": 10000
   },
   "waiting": {
-    "_basis": "42 U.S.C. 4013(c), 44 CFR 61.11 and FEMA Flood Insurance Manual 2.III: 30 days; none at a loan closing; 1 day in the 13 months after a map revision that newly places the building in a high-risk area (the statute says 1 year); 1 day after a wildfire on federal land within 60 days of containment.",
+    "_basis": "42 U.S.C. 4013(c), 44 CFR 61.11 and FEMA Flood Insurance Manual 2.III: 30 days; none at a loan closing; 1 day in the 13 months after a map revision that newly places the building in a high-risk area (the statute says 1 year); post-wildfire exception: wildfireWaitDays (1-day wait) for coverage bought on or before the fire containment date or within wildfirePurchaseWindowDays (60 calendar days) after it.",
     "days": 30,
     "loanDays": 0,
     "mapRevisionDays": 1,
     "mapRevisionMonths": 13,
-    "wildfireDays": 60
+    "wildfireWaitDays": 1,
+    "wildfirePurchaseWindowDays": 60
   },
   "sources": {
     "fema_sfh_cost": {
@@ -179,6 +180,12 @@
       "url": "https://www.floodsmart.gov/flood-zones-and-maps",
       "label": {
         "en": "FloodSmart: Flood zones and maps"
+      }
+    },
+    "fema_rr2_factsheet": {
+      "url": "https://agents.floodsmart.gov/sites/default/files/media/document/2025-08/fema-understanding-risk-rating-2.0-fact-sheet-2025.pdf",
+      "label": {
+        "en": "FEMA fact sheet: Understanding Risk Rating 2.0 (2025)"
       }
     }
   },
