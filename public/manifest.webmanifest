@@ -1,6 +1,6 @@
 {
- "name": "Flood Cost by ZIP",
- "short_name": "Flood Cost by ZIP",
+ "name": "Flood Cost ZIP",
+ "short_name": "Flood Cost ZIP",
  "description": "Flood insurance cost by ZIP code and county: today's premium, the full risk-based price, the 18% yearly steps between them and claims paid locally.",
  "start_url": "/en/",
  "display": "standalone",

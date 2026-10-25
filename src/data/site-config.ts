@@ -1,6 +1,8 @@
 /** Configuration centrale du site (générée par new-site.py). */
 export const SITE_URL = "https://floodcostzip.com";
-export const SITE_NAMES: Record<string, string> = {"en": "Flood Cost by ZIP"};
+// Partie du nom en couleur dans l'en-tete ('' = aucune).
+export const BRAND_ACCENT = 'ZIP';
+export const SITE_NAMES: Record<string, string> = {"en": "Flood Cost ZIP"};
 export const LANG_TAGS: Record<string, string> = {"en": "en-US"};
 export const OG_LOCALES: Record<string, string> = {"en": "en_US"};
 export const LOCALE_TAG = 'en-US';

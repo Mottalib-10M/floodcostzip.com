@@ -8,12 +8,12 @@ import { VALUE } from '../../content/home';
 import { profilePageSchema, breadcrumbSchema } from '../../lib/seo';
 const lang = 'en';
 const path = route('about', lang);
-const title = 'Flood insurance data publisher: who runs Flood Cost by ZIP';
-const description = 'Flood Cost by ZIP is published by Radif Partners from FEMA and OpenFEMA files: medians by ZIP code and county, no policy sold, no agent, no details asked.';
+const title = 'Flood insurance data publisher: who runs Flood Cost ZIP';
+const description = 'Flood Cost ZIP is published by Radif Partners from FEMA and OpenFEMA files: medians by ZIP code and county, no policy sold, no agent, no details asked.';
 ---
 <PageLayout title={title} description={description} lang={lang} jsonLd={[profilePageSchema({ path, lang }), breadcrumbSchema([{ name: 'Home', path: route('home', lang) }, { name: 'About', path }])]} breadcrumbs={[{ label: 'About' }]}>
   <article class="prose prose-slate max-w-none prose-headings:font-serif">
-    <h1>About Flood Cost by ZIP</h1>
+    <h1>About Flood Cost ZIP</h1>
     <p>{AUTHOR_DESC.en}</p>
     <h2>The gap this site fills</h2>
     <p>Pages that answer "how much is flood insurance" usually give one national number: an average from a survey, a figure from an old FEMA fact sheet, or a quote engine that wants your address and phone number first. None of them tells a homeowner in a given ZIP code what the neighbors actually pay, or how many more years of increases the law still allows. The federal flood program publishes the files that answer both questions; they are large and technical, and nobody had turned them into a lookup.</p>

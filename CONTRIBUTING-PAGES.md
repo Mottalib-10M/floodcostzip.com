@@ -1,4 +1,4 @@
-# Écrire ou étoffer une page de Flood Cost by ZIP (us-flood-cost)
+# Écrire ou étoffer une page de Flood Cost ZIP (us-flood-cost)
 
 Notice pour qui écrit les pages. À lire en entier avant d'écrire, avec `~/Documents/GitHub/RECETTE-SITE.md`.
 
