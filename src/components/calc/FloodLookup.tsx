@@ -64,15 +64,18 @@ export default function FloodLookup({ state = '', idPrefix = 'lk', methodHref }:
   }, [zip, zipRows]);
 
   const zipRow = zip.length === 5 ? zipRows[zip[0]]?.find((r) => r[0] === zip) : undefined;
-  useEffect(() => {
-    if (zip.length === 5 && zipRows[zip[0]] && !zipRow) setZipMsg(`ZIP ${zip} is not in FEMA's table (no single-family policy, or too few to publish). Showing the county or state instead.`);
-    else if (zipRow) setZipMsg('');
-  }, [zip, zipRows, zipRow]);
+  const zipMissing = zip.length === 5 && !!zipRows[zip[0]] && !zipRow;
+  // ZIP absente de la table : l'État se déduit des ZIP voisines (mêmes trois premiers chiffres), sinon la médiane
+  // nationale ; le message nomme ce qui est réellement affiché (audit de Sami du 2026-10-28 : 10001 montrait les États-Unis).
+  const zipState = zipMissing ? zipRows[zip[0]].find((r) => r[0].startsWith(zip.slice(0, 3)))?.[1] : undefined;
+  useEffect(() => { if (zipRow) setZipMsg(''); }, [zipRow]);
 
   const stateCounties = useMemo(() => (counties ?? []).filter((r) => r[1] === st).sort((a, b) => a[0].localeCompare(b[0])), [counties, st]);
   const countyRow = county ? stateCounties.find((r) => r[0] === county) : undefined;
 
-  const area: Area = zipRow ? rowArea(zipRow, 'zip') : countyRow ? rowArea(countyRow, 'county') : st ? stateArea(st) : natArea();
+  const area: Area = zipRow ? rowArea(zipRow, 'zip') : countyRow ? rowArea(countyRow, 'county') : st ? stateArea(st)
+    : zipState && LITE_STATES.some((s) => s.c === zipState) ? stateArea(zipState) : natArea();
+  const missingMsg = zipMissing ? `ZIP ${zip} is not in FEMA's table (no single-family policy, or too few to publish). Showing ${area.label} instead.` : '';
   const today = cur > 0 ? cur : area.polMed || area.current;
   const target = area.full || area.risk;
   const g = glide({ current: today, full: target, cap: capOf(use), fees: fixedFees(use), years: 5 });
@@ -92,7 +95,7 @@ export default function FloodLookup({ state = '', idPrefix = 'lk', methodHref }:
             <input id={`${idPrefix}-zip`} type="text" inputMode="numeric" autoComplete="postal-code" maxLength={5} value={zip} placeholder="e.g. 77573"
               onChange={(e) => { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)); }} aria-describedby={`${idPrefix}-zip-help`}
               className="tabular-nums h-12 w-full rounded-lg border border-navy-300 bg-white px-4 text-lg tracking-wider text-navy-900 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500/20" />
-            <p id={`${idPrefix}-zip-help`} role="status" className="mt-1 text-xs text-navy-500">{zipMsg || 'Five digits; or pick a county below'}</p>
+            <p id={`${idPrefix}-zip-help`} role="status" className="mt-1 text-xs text-navy-500">{zipMsg || missingMsg || 'Five digits; or pick a county below'}</p>
           </div>
           <NumberField id={`${idPrefix}-cur`} label="Your bill today (optional)" value={cur} onChange={setCur} unit="$" max={100000} help="Leave empty to use the local median" />
           <SelectField id={`${idPrefix}-st`} label="State" value={st} onChange={(v) => { setSt(v); setCounty(''); }} options={stateOptions} />
